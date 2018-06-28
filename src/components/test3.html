@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+  <script src="../../dist/static/js/vue.js"></script>
+</head>
+
+<body>
+<div id="app" class="static" v-bind:class="classObject" v-bind:style="[styleObject,ss]">
+  {{ feeling }}
+  <span v-if="Math.random()>0.5">随机数大于0.5</span>
+  <span v-else-if="Math.random()>0.3">小于0.3</span>
+  <span v-else-if="Math.random()>0.2">小于0.2</span>
+  <span v-else>大于0.5或小于0.2</span>
+  <template v-if="loginType ==='username'">
+    <label>username:</label>
+    <input placeholder="please input your username" der="qqq" key="username-input">
+  </template>
+  <template v-else>
+    <label style="color: blanchedalmond">email:</label>
+    <input placeholder="please input your email" key="email-input">
+  </template>
+  <button v-on:click="toggleType()">toggleType</button>
+  <h4 style="color: darkred">排名：</h4>
+  <ul>
+    <li v-for="(names,index) in school">
+      <span style="color: blueviolet">{{ index+1 }}：</span>{{ names.name }}
+    </li>
+  </ul>
+</div>
+
+<script>
+  var dr = new Vue({
+      el: "#app",
+      data: {
+        isActive: false,
+        feeling: 'bad',
+        styleObject: {
+          color: 'green',
+          fontSize: '20px'
+        },
+        school:[
+          {name:"厦门大学"},
+          {name:"北京大学"},
+          {name:"清华大学"}
+        ],
+        ss: {
+          margin: '20px'
+        },
+        loginType:'username'
+      },
+      computed: {
+        classObject: function () {
+          return {
+              active: this.isActive && !this.error,
+              'test-danger': this.error && this.error.type === 'fatal'
+          }
+        }
+      },
+      methods: {
+          toggleType: function () {
+            if(dr.loginType === 'username'){
+              dr.loginType = false
+            }else{
+                dr.loginType = 'username'
+            }
+          }
+      }
+  })
+</script>
+</body>
+</html>
