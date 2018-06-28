@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <title>Vue 测试实例</title>
   <script src="../../dist/static/js/vue.js"></script>
+
   <style>
     .lolo {
       font: 200;
@@ -13,10 +14,12 @@
     }
 
   </style>
+  <script src="../../dist/static/js/filter.js"></script>
 </head>
 <body>
 <div id="vue_det">
-  <p>{{{ message ? 'bad':'good' }}}</p>
+  <p>Using v-html directive: <span v-html="message"></span></p>
+  <button v-bind:disabled="isdisabledButton">ggg</button>
   <p>tt</p><input v-model="message">
   <p>yy</p><input v-model="newTodo" v-on:keyup.enter="addTodo">
   <a :href='url'>qqq</a>
@@ -30,19 +33,65 @@
   <button v-on:click="reverseMessage">Reverse Message</button>
 </div>
 <div id="exam">
-  <p>{{ message1 }}</p>
-  <p v-if="greeting">111</p>
-  <p>{{a}},{{b}}</p>
-  <span class="lolo" v-bind:class="{'class-a':isA,'class-b':isB}">firstName:<span/><input v-model="firstName"/><br/>
+  <p>{{a}}</p>
+  <span class="lolo">firstName:<span/><input v-model.lazy="firstName"/><br/>
   <span class="lolo">lastName:</span><input v-model="lastName"/>
   <p>{{ fullName }}</p>
-  <button v-on:click="toggleClass"/>改变颜色
+    <span>{{ now | formatDate }}</span>
+</div>
+<div id="bindtest">
+  <span v-bind:title="message2">
+      hover me!!!
+  </span>
+  <span v-if="seen">
+    you can see me!!!
+  </span>
+  <p>{{ foo }}</p>
+  <button v-on:click="foo='daa'">小按钮</button>
+</div>
+<div id="app-7">
+  <ol>
+    <!--
+      现在我们为每个 todo-item 提供 todo 对象
+      todo 对象是变量，即其内容可以是动态的。
+      我们也需要为每个组件提供一个“key”，稍后再
+      作详细解释。
+    -->
+    <todo-item
+      v-for="item in groceryList"
+      v-bind:todo="item"
+      v-bind:key="item.id">
+    </todo-item>
+  </ol>
 </div>
 <script type="text/javascript">
+  Vue.component('todo-item', {
+    props: ['todo'],
+    template: '<li>{{ todo.text }}</li>'
+  })
+  var app7 = new Vue({
+    el: '#app-7',
+    data: {
+      groceryList: [
+        { id: 0, text: '蔬菜' },
+        { id: 1, text: '奶酪' },
+        { id: 2, text: '随便其它什么人吃的东西' }
+      ]
+    }
+  })
+  var obj = {
+    message2:"clickmenotpergnation",
+    seen:true,
+    foo:'bar'
+  }
   var example = {
       message1: "nobody"
   }
   var data = {a:1}
+  var vm2 = new Vue({
+      el: "#bindtest",
+      data: obj
+  })
 
   var vm1 = new Vue({
       el:"#exam",
@@ -51,36 +100,48 @@
          firstName:'iqn',
          lastName:'naf',
       },
-    created: function () {
-      console.log('a is' + this.a)
-    },
-    computed:{
-      fullName: {
+      filters: {
+          formatDate(time){
+              var data = new Date(time)
+              return formatDate(data,'yyyy-MM-dd')
+          }
+      },
+      /*watch: {
+          firstName: function (val) {
+             this.fullName = val + this.lastName
+          },
+          lastName: function (val) {
+             this.fullName = this.firstName + val
+          }
+      },*/
+      created: function () {
+       console.log('a is' + this.a)
+      },
+      computed:{
+      /*fullName: {
         get: function () {
           return this.firstName+this.lastName
         },
         set: function (newValue) {
-          var names = newValue.split(' ')
+          var names = newValue.split('')
           this.firstName = names[0]
           this.lastName = names[names.length-1]
         }
-      }
-    },
-    toggleClass: function () {
+      },*/
+      fullName: function () {
+        return this.firstName+this.lastName
+      },
+      now: function () {
+        return Date.now()
+      }}
+  })
 
-    }
-  })
-  vm1.$watch('firstName',function (val) {
-    this.fullName = val + this.lastName
-  })
-  vm1.$watch('lastName',function (val) {
-    this.fullName = this.firstName + val
-  })
 
   var vm = new Vue({
     el: '#vue_det',
     data: {
-      message:'111',
+      isdisabledButton:false,
+      message:'<font color="aqua">111</font>',
       url:'77color.com',
       todos: [
         {text: 'i dont know'},
@@ -107,6 +168,9 @@
       }
     }
   })
+  //vm.$set(vm.todos,'text','i just add test')
+  vm.$data === data
+  vm.$el === document.getElementById('example')
 </script>
 </body>
 </html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test5</title>
+    <script src="../../dist/static/js/vue.js"></script>
+</head>
+
+<body>
+  <div id="test5">
+    <button v-on:click="counter+=1">
+      {{ counter }}
+    </button>
+    <button v-on:click="greet">Greet</button>
+    <button v-on:keyup.delete="say('hi')">sayHi</button>
+    <button v-on:click="say('who')">saywho</button>
+    <div id="components-demo">
+      <button-counter></button-counter>
+    </div>
+  </div>
+  <script>
+    var vm = new Vue({
+        el: "#test5",
+        data:{
+          counter: 0,
+          name: 'hhh'
+        },
+        methods: {
+            greet: function (event) {
+              alert(this.name+"!!!!!")
+              if(event){
+                  alert(event.target.tagName)
+              }
+            },
+            say: function (msg,event) {
+              if(event) event.preventDefault()
+              alert(msg)
+            }
+        }
+    })
+    // 定义一个名为 button-counter 的新组件
+    Vue.component('button-counter', {
+      data: function () {
+        return {
+          count: 0
+        }
+      },
+      template: '<button v-on:click="count++">You clicked me {{ count }} times.</button>'
+    })
+    var vm1 = new Vue({
+        el: "components-demo"
+    })
+
+  </script>
+</body>
+</html>

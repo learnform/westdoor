@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>form表单</title>
+    <script src="../../dist/static/js/vue.js"></script>
+  <style>
+    .q1
+    {
+      font-size: 15px;
+      color: #42b983;
+      margin: auto;
+    }
+    .t1
+    {
+      border-style: inset;
+      background-color: aquamarine;
+      background-image: url("../../dist/static/image/01d881579dc3620000018c1b430c4b.JPG@3000w_1l_2o_100sh.jpg");
+      width: 600px;
+      height: 300px;
+    }
+    .q2
+    {
+      margin-top: 2px;
+      margin-left: 195px;
+      margin-right: 15px;
+    }
+    .title
+    {
+      color: fuchsia;
+      font-size: 20px;
+
+    }
+  </style>
+
+</head>
+<body style="background-image: url('../../dist/static/image/01d881579dc3620000018c1b430c4b.JPG@3000w_1l_2o_100sh.jpg')">
+<form id="myform" style="margin-left: 700px; margin-top: 300px;" >
+  <div class="t1" >
+    <div style="margin-top: 30px">
+    <div class="title" align="center">登陆系统</div>
+    <div class="q2"><span class="q1">用户名</span>:<input v-model="username" placeholder="请输入用户名"/></div><br/>
+    <div class="q2"><span class="q1">密码&nbsp&nbsp   </span>:<input v-model="password" placeholder="请输入密码"></div><br/>
+    <div class="q2"><span class="q1">密码&nbsp&nbsp   </span>:<input v-model="passagain" placeholder="请再次输入密码"></div><br/>
+      <div class="q2"><span class="q1">mutiLineMessage:</span><br><br/>
+        <textarea v-mode="message" placeholder="允许你输入一些文字"></textarea></div>
+    <div class="q2" align="center"><button v-on:click="submit">提交</button></div><br/>
+    </div>
+  </div>
+</form>
+<input type="checkbox" id="checkbox" v-model="checked">
+<div id='example-3'>
+  <input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+  <label for="jack">Jack</label>
+  <input type="checkbox" id="john" value="John" v-model="checkedNames">
+  <label for="john">John</label>
+  <input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+
+  <label for="mike">Mike</label>
+  <br>
+  <span>Checked names: {{ checkedNames }}</span>
+</div>
+<div id="example-5">
+  <select v-model="selected">
+    <option disabled value="">请选择</option>
+    <option>A</option>
+    <option>B</option>
+    <option>C</option>
+  </select>
+  <span>Selected: {{ selected }}</span>
+</div>
+<div id="example-6">
+  <select v-model="selected">
+    <option v-for="option in options" v-bind:value="option.value">
+        {{ option.text }}
+    </option>
+  </select>
+</div>
+<script>
+  var ve = new Vue({
+      el: "#example-3",
+      data: {
+          checkedNames:[]
+      }
+  })
+  var ve1 = new Vue({
+      el: "#example-5",
+      data: {
+          selected: ''
+      }
+  })
+  var ve2 = new Vue({
+      el: "#example-6",
+      data: {
+          options: [
+            {value:1,text:"选我1"},
+            {value:2,text:"选我2"},
+            {value:3  ,text:"选我3"}
+          ]
+      }
+  })
+</script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test4</title>
+    <script src="../../dist/static/js/vue.js"></script>
+</head>
+<body>
+<div id="test4-example">
+  <form v-on:submit.prevent="addNewTodo">
+    <label for="new-todo">Add a todo</label>
+    <input v-model="newTodoText" id="new-todo" placeholder="please input something">
+    <button>Add</button>
+  </form>
+  <ul>
+      <li is="todo-item" v-for="(todo,index) in todos" v-bind:key="todo.id" v-bind:title="todo.title" v-on:remove=" todos.splice(index,1)">
+      </li>
+  </ul>
+  <script>
+    var vm  = new Vue({
+        el: "#test4-example",
+        data: {
+            newTodoText: '',
+            todos: [
+              {
+                id: 1,
+                title: "butiamnotbadone"
+              },
+              {
+                  id: 2,
+                  title: "youleavemewhyknowthat"
+              }
+            ],
+            nextTodoId: 4
+        },
+        methods: {
+          addNewTodo: function () {
+            if(this.newTodoText === "" || this.newTodoText.trim() === ""){
+              alert("输入内容不能为空！！！")
+              this.newTodoText = ""
+              return
+            }
+            this.todos.push(
+                {
+                    id: this.nextTodoId++,
+                    title: this.newTodoText
+                }
+            )
+                this.newTodoText=''
+          }
+        }
+    })
+
+    Vue.component('todo-item', {
+      template: '\
+    <li>\
+      {{ title }}\
+      <button v-on:click="$emit(\'remove\')">Remove</button>\
+    </li>\
+  ',
+      props: ['title']
+    })
+  </script>
+</div>
+</body>
+</html>
