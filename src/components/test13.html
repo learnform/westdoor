@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../../dist/static/js/vue.js"></script>
+</head>
+<body>
+<div id="app">
+  <input v-focus="">
+  <div id="hook-arguments-example" v-demo:foo.a.b="message"></div>
+</div>
+<div id="app1" v-demo1="{color: 'white',text: 'hello!'}"></div>
+<script>
+  //定义一个混入对象
+  var myMixin = {
+      created: function () {
+        console.log(this.$data)
+      },
+      methods: {
+          hello: function () {
+            console.log('lalalalala')
+
+          }
+      },
+      data: function () {
+        return {
+            message: "hello",
+            data: "111"
+        }
+      }
+  }
+  Vue.directive('focus',{
+      inserted: function (el) {
+        el.focus()
+      }
+  })
+  Vue.directive('demo1',function (el,binding) {
+    console.log(binding.value.color) // => "white"
+    console.log(binding.value.text)  // => "hello!"
+  })
+/*Vue.component('focus',{
+  directive: {
+    focus: {
+      inserted: function (el) {
+        el.focus()
+      }
+    }
+  }
+})*/
+
+//定义一个使用混入对象的组件
+var Component = Vue.extend({
+    mixins: [myMixin]
+})
+
+var component = new Component()
+  Vue.directive('demo', {
+    bind: function (el, binding, vnode) {
+      var s = JSON.stringify
+      el.innerHTML =
+        'name: '       + s(binding.name) + '<br>' +
+        'value: '      + s(binding.value) + '<br>' +
+        'expression: ' + s(binding.expression) + '<br>' +
+        'argument: '   + s(binding.arg) + '<br>' +
+        'modifiers: '  + s(binding.modifiers) + '<br>' +
+        'vnode keys: ' + Object.keys(vnode).join(', ')
+    }
+  })
+
+  new Vue({
+    el: '#hook-arguments-example',
+    data: {
+      message: 'hello!'
+    }
+  })
+  new Vue({
+    el: '#app',
+    mixins: [myMixin],
+    data: function () {
+      return {
+        message: '1qqq',
+        data1: '2222'
+      }
+    }
+
+  })
+</script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>组件测试</title>
+  <script src="../../dist/static/js/vue.js"></script>
+
+</head>
+<body>
+<div id="blog-posts-events-demo" class="demo">
+  <div :style="{ fontSize: postFontSize + 'em' }">
+    <blog-post v-for="post in posts" v-bind:key="post.id" v-bind:post="post" v-on:enlarge-text="enlargetext"></blog-post>
+  </div>
+  <input v-model="username"/>
+  {{ username }}
+  <input v-bind:value="username1" v-on:input="username1=$event.target.value">
+  {{ username1 }}
+  <customer-input v-model="username2"></customer-input>
+  {{ username2 }}
+  <alert-box>
+    something bad maybe happend!
+  </alert-box>
+</div>
+<div id="dynamic-component-demo" class="deni">
+  <button v-for="tab in tabs" v-bind:key="tab"  class="dynamic-component-demo-tab-button" v-bind:class="{'dynamic-component-demo-tab-button-active': tab === currentTab }" v-on:click="currentTab = tab">
+    {{ tab }}
+  </button>
+  <component v-bind:is="currentTabComponent" class="dynamic-component-demo-tab"></component>
+</div>
+<script>
+  Vue.component('blog-post', {
+    props: ['post'],
+    template: '\
+    <div class="blog-post">\
+      <h3>{{ post.title }}</h3>\
+      <button v-on:click="$emit(\'enlarge-text\',0.1)">\
+        Enlarge text\
+      </button>\
+      <div v-html="post.content"></div>\
+    </div>\
+  '
+  })
+  Vue.component('customer-input',{
+      prop: ['value'],
+      template: '\
+                <input v-bind:value="value" \
+                v-on:input="$emit(\'input\',$event.target.value)">\
+                '
+  })
+  Vue.component('alert-box',{
+      template:'\
+        <div class="q1">\
+         <strong>Error:</strong>\
+         <slot></slot>\
+        </div>\
+        '
+  })
+  Vue.component('tab-home',{
+      template: '<div>Home Component</div>'
+  })
+  Vue.component('tab-posts',{
+    template: '<div>post Component</div>'
+  })
+  Vue.component('tab-archive',{
+    template: '<div>archive Component</div>'
+  })
+  Vue.component('button-Input',{
+      template:'\
+        <BaseInput @keydown.enter="search" v-model="searchText">\
+      '
+  })
+  new Vue({
+      el: "#dynamic-component-demo",
+      data: {
+          currentTab: 'Home',
+          tabs: ['Home', 'Posts', 'Archive']
+      },
+      computed: {
+        currentTabComponent: function () {
+          return 'tab-'+this.currentTab.toLowerCase()
+        }
+      }
+  })
+  new Vue({
+    el: '#blog-posts-events-demo',
+    data: {
+      posts: [
+        { id: 1, title: 'My journey with Vue', content: '...content...' },
+        { id: 2, title: 'Blogging with Vue', content: '...content...' },
+        { id: 3, title: 'Why Vue is so fun', content: '...content...' }
+      ],
+      postFontSize: 1,
+      username:'',
+      username1:'',
+      username2:''
+    },
+    methods: {
+      enlargetext: function (val) {
+        this.postFontSize+=val
+      }
+    }
+  })
+</script>
+<style>
+  .dynamic-component-demo-tab-button {
+    padding: 6px 10px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    background: #f0f0f0;
+    margin-bottom: -1px;
+    margin-right: -1px;
+  }
+  .dynamic-component-demo-tab-button:hover {
+    background: #e0e0e0;
+  }
+  .dynamic-component-demo-tab-button-active {
+    background: #e0e0e0;
+  }
+  .dynamic-component-demo-tab {
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
+</style>
+
+</body>
+</html>

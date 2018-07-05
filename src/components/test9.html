@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>紫</title>
+    <script src="../../dist/static/js/vue.js"></script>
+</head>
+<body>
+<div id="app1">
+  <button  v-for="tab in tabs" v-bind:key="tab" v-bind:class="['dynamic-component-demo-tab-button',{'dynamic-component-demo-active':currentTab === tab}]" v-on:click="currentTab = tab">
+    {{ tab }}
+  </button>
+  <keep-alive>
+  <component v-bind:is="currentTabComponent" class="dynamic-component-demo-tab"></component>
+  </keep-alive>
+</div>
+  <script>
+    Vue.component('async-example',function (resolve,reject) {
+      setTimeout(function () {
+        resolve({
+            template: '<h3>who am i!</h3>'
+        })
+      },1000)
+    })
+    Vue.component('tab-archive', {
+      template: '<div>Archive component</div>'
+    })
+    Vue.component('tab-ddd', {
+      template: '<div>ddd component</div>'
+    })
+    Vue.component('tab-posts',{
+        data: function () {
+          return {
+            posts:[
+              {
+                  id:1,
+                  title:'ggg',
+                  content:'sss'
+              },
+              {
+                id: 2,
+                title: 'fff',
+                content: 'ddd'
+              }
+            ],
+            selectedPost: null
+          }
+        },
+        template: '\
+          <div class="dynamic-component-demo-posts-tab">\
+          <ul class="dynamic-component-demo-posts-sidebar">\
+          <li\
+            v-for="post in posts"\
+            v-bind:key="post.id"\
+            v-bind:class="{\'dynamic-component-demo-active\': post === selectedPost}"\
+            v-on:click="selectedPost = post">\
+            {{  post.title }}\
+            </li>\
+          </ul>\
+          <div class="dynamic-component-demo-post-container">\
+          <div v-if="selectedPost" class="dynamic-component-demo-post">\
+          <h3>{{ selectedPost.title}}</h3>\
+          <div v-html="selectedPost.content"></div>\
+          </div>\
+          <strong v-else>\
+            Click on a blog title to the left to view it\
+          </strong>\
+          </div>\
+          </div>\
+        '
+    })
+    new Vue({
+        el:'#app1',
+        data: {
+            currentTab: 'Posts',
+            tabs: ['Posts','Archive','ddd']
+        },
+        computed: {
+            currentTabComponent: function () {
+              return 'tab-'+this.currentTab.toLowerCase()
+            }
+        }
+    })
+  </script>
+</body>
+<style>
+.dynamic-component-demo-tab-button {
+  padding: 6px 10px;
+  border-top-left-radius: 3px;
+  border-top-left-radius: 3px;
+  border: 1px solid #cccccc;
+  cursor: pointer;
+  background: #f0f0f0;
+  margin-bottom: -1px;
+  margin-right: -1px;
+}
+.dynamic-component-demo-tab-button:hover{
+  background: #e0e0e0;
+}
+.dynamic-component-demo-tab-button.dynamic-component-demo-active {
+  background: #e0e0e0;
+}
+.dynamic-component-demo-tab{
+  border: 1px solid #e0e0e0;
+  padding: 10px;
+}
+.dynamic-component-demo-posts-tab {
+  display: flex;
+}
+.dynamic-component-demo-posts-sidebar {
+  max-width: 40vw;
+  margin: 0 !important;
+  padding: 0 10px 0 0 !important;
+  list-style-type: none;
+  border-right: 1px solid #ccc;
+}
+.dynamic-component-demo-posts-sidebar li {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  cursor: pointer;
+}
+.dynamic-component-demo-posts-sidebar li:hover {
+  background: #eee;
+}
+.dynamic-component-demo-posts-sidebar li.dynamic-component-demo-active {
+  background: lightblue;
+}
+.dynamic-component-demo-post-container {
+  padding-left: 10px;
+}
+.dynamic-component-demo-post > :first-child {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+</style>
+</html>

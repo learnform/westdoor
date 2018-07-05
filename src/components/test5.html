@@ -18,12 +18,14 @@
       <button-counter></button-counter>
     </div>
   </div>
+  <blog-post post-title="hello!"></blog-post>
   <script>
     var vm = new Vue({
         el: "#test5",
         data:{
           counter: 0,
           name: 'hhh'
+          postTitle: ''
         },
         methods: {
             greet: function (event) {
@@ -49,6 +51,11 @@
     })
     var vm1 = new Vue({
         el: "components-demo"
+    })
+    Vue.component('blog-post', {
+      // 在 JavaScript 中是 camelCase 的
+      props: ['postTitle'],
+      template: '<h3>{{ postTitle }}</h3>'
     })
 
   </script>
